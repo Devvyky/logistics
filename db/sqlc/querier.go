@@ -6,10 +6,15 @@ package db
 
 import (
 	"context"
+
+	"github.com/google/uuid"
 )
 
 type Querier interface {
 	CreatePackSize(ctx context.Context, arg CreatePackSizeParams) (ProductPackSize, error)
+	GetPackSize(ctx context.Context, id uuid.UUID) (ProductPackSize, error)
+	ListPackSizes(ctx context.Context, arg ListPackSizesParams) ([]ProductPackSize, error)
+	UpdatePackSizes(ctx context.Context, arg UpdatePackSizesParams) (ProductPackSize, error)
 }
 
 var _ Querier = (*Queries)(nil)
