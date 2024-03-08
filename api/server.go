@@ -14,19 +14,11 @@ func NewServer(store db.Store) *Server {
 	server := &Server{store: store}
 	router := gin.Default()
 
-	// if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-	// 	v.RegisterValidation("currency", validCurrency)
-	// }
-
-	// router.POST("/users", server.createUser)
-
-	// router.POST("/accounts", server.createAccount)
-	// router.GET("/accounts/:id", server.getAccount)
-	// router.GET("/accounts", server.listAccounts)
-	// router.PUT("/accounts/:id", server.updateAccount)
-	// router.DELETE("/accounts/:id", server.deleteAccount)
-
-	// router.POST("/transfers", server.createTransfer)
+	router.GET("/products", server.listPackSizes)
+	router.GET("/products/:id", server.getPackSize)
+	router.POST("/products", server.createPackSize)
+	router.PUT("/products/:id", server.updatePackSize)
+	router.DELETE("/products/:id", server.deletePackSize)
 
 	server.router = router
 	return server

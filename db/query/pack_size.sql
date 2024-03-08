@@ -23,3 +23,6 @@ SET pack_size = $2,
     product_line = $3
 WHERE id = $1
 RETURNING *;
+
+-- name: DeletePackSize :exec
+DELETE FROM product_pack_sizes WHERE id = $1;

@@ -38,6 +38,15 @@ func (q *Queries) CreatePackSize(ctx context.Context, arg CreatePackSizeParams) 
 	return i, err
 }
 
+const deletePackSize = `-- name: DeletePackSize :exec
+DELETE FROM product_pack_sizes WHERE id = $1
+`
+
+func (q *Queries) DeletePackSize(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.ExecContext(ctx, deletePackSize, id)
+	return err
+}
+
 const getPackSize = `-- name: GetPackSize :one
 SELECT id, product_line, pack_size, updated_at, created_at FROM product_pack_sizes
 WHERE id = $1 LIMIT 1
