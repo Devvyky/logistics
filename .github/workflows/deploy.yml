@@ -7,21 +7,11 @@ on:
     branches: ["main"]
 
 jobs:
-  test:
+  build:
     name: Build image
     runs-on: ubuntu-latest
 
     steps:
-      - name: Print working directory
-        run: |
-          echo "Working directory: $PWD"
-
-      - name: List files in working directory
-        run: ls -la
-
-      - name: Print content of Dockerfile
-        run: cat Dockerfile || echo "Dockerfile not found"
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
