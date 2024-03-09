@@ -23,5 +23,6 @@ func (server *Server) createOrder(ctx *gin.Context) {
 
 	orderResp[250] = 1
 	orderResp[500] = 2
+	orderResp[1000] = 1
 	ctx.JSON(http.StatusOK, orderResp)
 }
