@@ -2,6 +2,7 @@ package api
 
 import (
 	db "github.com/devvyky/logistics/db/sqlc"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,6 +14,7 @@ type Server struct {
 func NewServer(store db.Store) *Server {
 	server := &Server{store: store}
 	router := gin.Default()
+	router.Use(cors.Default())
 
 	router.GET("/products", server.listPackSizes)
 	router.GET("/products/:id", server.getPackSize)
