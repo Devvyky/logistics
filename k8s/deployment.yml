@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logistics-api-deployment
+  labels:
+    app: logistics-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logistics-api
+  template:
+    metadata:
+      labels:
+        app: logistics-api
+    spec:
+      containers:
+        - name: logistics-api
+          image: 567981145953.dkr.ecr.eu-west-2.amazonaws.com/logistics:ec6a1649dbdd35311ca5a117a03561c425f0be5f
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 2000
