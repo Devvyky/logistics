@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: logistics-api
-          image: 567981145953.dkr.ecr.eu-west-2.amazonaws.com/logistics:ec6a1649dbdd35311ca5a117a03561c425f0be5f
+          image: 567981145953.dkr.ecr.eu-west-2.amazonaws.com/logistics:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 2000
