@@ -14,7 +14,6 @@ type Querier interface {
 	CreatePackSize(ctx context.Context, arg CreatePackSizeParams) (ProductPackSize, error)
 	DeletePackSize(ctx context.Context, id uuid.UUID) error
 	GetPackSize(ctx context.Context, id uuid.UUID) (ProductPackSize, error)
-	ListPackSizes(ctx context.Context, arg ListPackSizesParams) ([]ProductPackSize, error)
 	ListPackSizesByProductLine(ctx context.Context, productLine string) ([]ProductPackSize, error)
 	ListProductLines(ctx context.Context) ([]string, error)
 	UpdatePackSizes(ctx context.Context, arg UpdatePackSizesParams) (ProductPackSize, error)

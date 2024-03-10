@@ -14,7 +14,6 @@ type createOrderParams struct {
 
 func (server *Server) createOrder(ctx *gin.Context) {
 	var req createOrderParams
-
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
@@ -40,8 +39,12 @@ func (server *Server) createOrder(ctx *gin.Context) {
 
 func fulfilOrder(qty int, packSizes []int) map[int]int {
 	var packSizeQtyMap = make(map[int]int)
-
 	left, right, remaining := 0, len(packSizes)-1, qty
+
+	if qty <= packSizes[0] {
+		packSizeQtyMap[packSizes[0]] = 1
+		return packSizeQtyMap
+	}
 
 	for left <= right && remaining > 0 {
 		var currPackSize = packSizes[right]
@@ -61,25 +64,24 @@ func fulfilOrder(qty int, packSizes []int) map[int]int {
 		} else {
 			right--
 		}
+	}
 
-		// if remaining > 0 && len(packSizeQtyMap) == 1 {
-		// 	for packSize := range packSizeQtyMap {
-		// 		packSizeQtyMap[packSize]++
-		// 	}
-		// }
+	if remaining > 0 && len(packSizeQtyMap) == 1 {
+		for packSize := range packSizeQtyMap {
+			packSizeQtyMap[packSize]++
+		}
+	}
 
-		// fulfill by pack size
-		for packSize, count := range packSizeQtyMap {
-			if count == 2 {
-				multipleOfKey := packSize * 2
+	// fulfill by pack size
+	for packSize, count := range packSizeQtyMap {
+		if count == 2 {
+			multipleOfKey := packSize * 2
 
-				if slices.Contains(packSizes, multipleOfKey) {
-					packSizeQtyMap[multipleOfKey] = 1
-					delete(packSizeQtyMap, packSize)
-				}
+			if slices.Contains(packSizes, multipleOfKey) {
+				packSizeQtyMap[multipleOfKey] = 1
+				delete(packSizeQtyMap, packSize)
 			}
 		}
-		return packSizeQtyMap
 	}
 	return packSizeQtyMap
 }

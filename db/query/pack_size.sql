@@ -10,13 +10,6 @@ INSERT INTO product_pack_sizes (
 SELECT * FROM product_pack_sizes
 WHERE id = $1 LIMIT 1;
 
-
--- name: ListPackSizes :many
-SELECT * FROM product_pack_sizes
-ORDER BY id
-LIMIT $1
-OFFSET $2;
-
 -- name: ListPackSizesByProductLine :many
 SELECT * FROM product_pack_sizes
 WHERE product_line = $1
