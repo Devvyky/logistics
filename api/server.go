@@ -16,7 +16,8 @@ func NewServer(store db.Store) *Server {
 	router := gin.Default()
 	router.Use(cors.Default())
 
-	router.GET("/products", server.listPackSizes)
+	router.GET("/products/lines", server.listProductLines)
+	router.GET("/products", server.listPackSizeByProductLines)
 	router.GET("/products/:id", server.getPackSize)
 	router.POST("/products", server.createPackSize)
 	router.PUT("/products/:id", server.updatePackSize)

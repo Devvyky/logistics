@@ -93,6 +93,25 @@ func (server *Server) listPackSizes(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, packSizes)
 }
 
+type listPackSizeByProductLinesParams struct {
+	ProductLine string `form:"product_line" binding:"required"`
+}
+
+func (server *Server) listPackSizeByProductLines(ctx *gin.Context) {
+	var req listPackSizeByProductLinesParams
+	if err := ctx.ShouldBindQuery(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	packSizes, err := listPackSizeByProductLines(ctx, req, server)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, packSizes)
+}
+
 type updatePackSizeParams struct {
 	ProductLine string `json:"product_line" binding:"required"`
 	PackSize    int64  `json:"pack_size" binding:"required"`
@@ -147,4 +166,25 @@ func (server *Server) deletePackSize(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusNoContent, gin.H{})
+}
+
+func (server *Server) listProductLines(ctx *gin.Context) {
+	productLines, err := server.store.ListProductLines(ctx)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, productLines)
+}
+
+func listPackSizeByProductLines(
+	ctx *gin.Context,
+	req listPackSizeByProductLinesParams,
+	server *Server) ([]db.ProductPackSize, error) {
+	packSizes, err := server.store.ListPackSizesByProductLine(ctx, req.ProductLine)
+	return packSizes, err
 }

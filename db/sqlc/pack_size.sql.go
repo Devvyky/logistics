@@ -106,6 +106,69 @@ func (q *Queries) ListPackSizes(ctx context.Context, arg ListPackSizesParams) ([
 	return items, nil
 }
 
+const listPackSizesByProductLine = `-- name: ListPackSizesByProductLine :many
+SELECT id, product_line, pack_size, updated_at, created_at FROM product_pack_sizes
+WHERE product_line = $1
+ORDER by pack_size ASC
+`
+
+func (q *Queries) ListPackSizesByProductLine(ctx context.Context, productLine string) ([]ProductPackSize, error) {
+	rows, err := q.db.QueryContext(ctx, listPackSizesByProductLine, productLine)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []ProductPackSize{}
+	for rows.Next() {
+		var i ProductPackSize
+		if err := rows.Scan(
+			&i.ID,
+			&i.ProductLine,
+			&i.PackSize,
+			&i.UpdatedAt,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const listProductLines = `-- name: ListProductLines :many
+SELECT DISTINCT product_line
+FROM product_pack_sizes
+`
+
+func (q *Queries) ListProductLines(ctx context.Context) ([]string, error) {
+	rows, err := q.db.QueryContext(ctx, listProductLines)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []string{}
+	for rows.Next() {
+		var product_line string
+		if err := rows.Scan(&product_line); err != nil {
+			return nil, err
+		}
+		items = append(items, product_line)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updatePackSizes = `-- name: UpdatePackSizes :one
 UPDATE product_pack_sizes
 SET pack_size = $2,

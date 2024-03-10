@@ -17,6 +17,11 @@ ORDER BY id
 LIMIT $1
 OFFSET $2;
 
+-- name: ListPackSizesByProductLine :many
+SELECT * FROM product_pack_sizes
+WHERE product_line = $1
+ORDER by pack_size ASC;
+
 -- name: UpdatePackSizes :one
 UPDATE product_pack_sizes
 SET pack_size = $2,
@@ -26,3 +31,7 @@ RETURNING *;
 
 -- name: DeletePackSize :exec
 DELETE FROM product_pack_sizes WHERE id = $1;
+
+-- name: ListProductLines :many
+SELECT DISTINCT product_line
+FROM product_pack_sizes;
